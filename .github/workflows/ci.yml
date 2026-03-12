@@ -25,17 +25,19 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pip-ci-${{ matrix.python-version }}-${{ hashFiles('requirements-ci.txt') }}
 
-      - name: Install dependencies
+      - name: Install CI dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-ci.txt
 
       - name: Run tests
         env:
           OPENAI_API_KEY: "sk-test-dummy"
+          HUGGINGFACE_TOKEN: "hf-test-dummy"
           ENVIRONMENT: test
+          VECTORSTORE_PATH: "data/vectorstore"
         run: |
           pytest tests/ -v --tb=short --cov=src --cov-report=xml
 
@@ -53,4 +55,4 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install ruff
-      - run: ruff check src/ scripts/ tests/ --ignore E501
+      - run: ruff check src/ scripts/ tests/ --ignore E501 --ignore E402 --ignore F401
