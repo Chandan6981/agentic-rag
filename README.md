@@ -1,8 +1,8 @@
-# 🤖 Agentic RAG System for Domain-Specific Q&A
+# Agentic RAG System for Domain-Specific Q&A
 
 A production-ready multi-agent Retrieval-Augmented Generation (RAG) system that autonomously decomposes multi-hop queries, routes to specialized sub-agents, and synthesizes grounded answers with source attribution.
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 User Query
@@ -32,7 +32,7 @@ User Query
       └──────────────────────┘
 ```
 
-## ✨ Features
+##  Features
 
 - **Multi-Agent Orchestration** — LangChain-powered orchestrator decomposes complex multi-hop queries and delegates to specialized sub-agents
 - **Hybrid Retrieval** — FAISS dense vector search combined with BM25 sparse retrieval for robust document retrieval
@@ -43,7 +43,7 @@ User Query
 - **Serverless GCP Deployment** — Cloud Run auto-scaling with AWS S3-backed document ingestion
 - **REST API** — FastAPI with structured request/response schemas
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 agentic-rag/
@@ -98,7 +98,7 @@ agentic-rag/
 └── README.md
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -148,7 +148,7 @@ curl -X POST http://localhost:8080/api/v1/query \
   }'
 ```
 
-## 🐳 Docker
+## Docker
 
 ```bash
 docker-compose up --build
@@ -181,7 +181,7 @@ python scripts/finetune_lora.py \
   --config configs/lora_config.yaml
 ```
 
-## 📊 Evaluation (RAGAS)
+## Evaluation (RAGAS)
 
 ```bash
 python scripts/evaluate.py \
@@ -202,7 +202,7 @@ Expected metrics (on domain eval set):
 pytest tests/ -v --cov=src
 ```
 
-## 📝 API Reference
+## API Reference
 
 ### `POST /api/v1/query`
 Submit a question to the agentic RAG system.
@@ -235,7 +235,7 @@ Ingest documents into the vector store.
 ### `GET /api/v1/health`
 Health check endpoint.
 
-## 🛡️ Responsible AI
+## Responsible AI
 
 This system implements Constitutional AI-style output filtering:
 - Toxic/harmful content detection and blocking
@@ -243,10 +243,7 @@ This system implements Constitutional AI-style output filtering:
 - Bias detection on model outputs
 - PII scrubbing in retrieved context
 
-## 🤝 Contributing
+## Contributing
 
 PRs welcome. Please open an issue first for major changes.
 
-## 📄 License
-
-MIT
