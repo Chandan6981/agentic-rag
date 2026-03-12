@@ -1,4 +1,4 @@
-# ── configs/config.yaml ─────────────────────────────────────────────────────
+#configs/config.yaml
 
 app:
   name: "Agentic RAG System"
@@ -13,7 +13,7 @@ api:
   timeout: 120
 
 llm:
-  provider: openai          # openai | huggingface
+  provider: openai          # openai huggingface
   model: gpt-4o
   temperature: 0.0
   max_tokens: 1024
