@@ -1,4 +1,4 @@
-# ── Stage 1: builder ─────────────────────────────────────────────────────────
+#Stage 1: builder
 FROM python:3.11-slim AS builder
 
 WORKDIR /app
@@ -18,7 +18,7 @@ RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 
-# ── Stage 2: runtime ──────────────────────────────────────────────────────────
+#Stage 2: runtime
 FROM python:3.11-slim AS runtime
 
 WORKDIR /app
