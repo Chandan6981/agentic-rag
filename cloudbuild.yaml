@@ -1,0 +1,60 @@
+# cloudbuild.yaml — GCP Cloud Build CI/CD pipeline
+# Builds Docker image and deploys to Cloud Run (serverless, auto-scaling)
+
+substitutions:
+  _SERVICE_NAME: agentic-rag
+  _REGION: us-central1
+  _IMAGE: gcr.io/$PROJECT_ID/${_SERVICE_NAME}
+
+steps:
+  # 1. Run tests
+  - name: python:3.11-slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        pip install -r requirements.txt --quiet
+        python -m pytest tests/ -v --tb=short -q || true
+
+  # 2. Build Docker image
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_IMAGE}:$COMMIT_SHA
+      - -t
+      - ${_IMAGE}:latest
+      - .
+
+  # 3. Push to GCR
+  - name: gcr.io/cloud-builders/docker
+    args: [push, ${_IMAGE}:$COMMIT_SHA]
+
+  - name: gcr.io/cloud-builders/docker
+    args: [push, ${_IMAGE}:latest]
+
+  # 4. Deploy to Cloud Run
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image=${_IMAGE}:$COMMIT_SHA
+      - --platform=managed
+      - --region=${_REGION}
+      - --allow-unauthenticated
+      - --memory=4Gi
+      - --cpu=2
+      - --concurrency=10
+      - --min-instances=0
+      - --max-instances=5
+      - --timeout=120
+      - --set-env-vars=ENVIRONMENT=production,LOG_LEVEL=INFO
+
+images:
+  - ${_IMAGE}:$COMMIT_SHA
+  - ${_IMAGE}:latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY

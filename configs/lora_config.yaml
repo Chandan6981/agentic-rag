@@ -1,0 +1,47 @@
+# ── configs/lora_config.yaml ────────────────────────────────────────────────
+
+base_model: meta-llama/Llama-2-7b-hf
+
+lora:
+  r: 16                        # LoRA rank
+  lora_alpha: 32               # scaling factor
+  target_modules:
+    - q_proj
+    - v_proj
+    - k_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  lora_dropout: 0.05
+  bias: none
+  task_type: CAUSAL_LM
+
+bnb:                           # QLoRA 4-bit quantization
+  load_in_4bit: true
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_compute_dtype: bfloat16
+  bnb_4bit_use_double_quant: true
+
+training:
+  output_dir: models/llama2-lora-finetuned
+  num_train_epochs: 3
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-4
+  weight_decay: 0.001
+  warmup_ratio: 0.03
+  lr_scheduler_type: cosine
+  save_steps: 100
+  logging_steps: 25
+  max_seq_length: 2048
+  fp16: false
+  bf16: true
+  group_by_length: true
+  report_to: none              # or "wandb"
+
+dataset:
+  train_path: data/processed/train.jsonl
+  val_path: data/processed/val.jsonl
+  text_field: text             # field name in jsonl
+  max_samples: null            # null = use all
